@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 nodejs btsync.js init
 
@@ -8,6 +8,4 @@ then
 fi
 
 nodejs btsync.js restart
-./console.sh
-
-/bin/bash
+nodejs console.js
