@@ -8,4 +8,6 @@ then
 fi
 
 nodejs btsync.js restart
-nodejs console.js
+
+while :; do nodejs console.js; done
+
