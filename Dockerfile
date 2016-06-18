@@ -1,19 +1,16 @@
-FROM ubuntu:14.04
-MAINTAINER Adrien Duermael (adrien@duermael.com)
+FROM frolvlad/alpine-glibc
+MAINTAINER Mykola Grechukh (nick.grechukh@gmail.com)
 
-ENV DEBIAN_FRONTEND noninteractive
+RUN apk add --update curl tar && \
+    curl http://syncapp.bittorrent.com/1.4.111/btsync_x64-1.4.111.tar.gz | tar xvfz - -C /usr/bin/ btsync && \
+    apk del --purge curl tar \
+    ; rm -rf /var/cache/apk/*
 
-########## BTSYNC ##########
+RUN apk add --update nodejs \
+    ; rm -rf /var/cache/apk/*
+RUN ln -s /usr/bin/node /usr/bin/nodejs
 
-RUN apt-get update -y
-RUN apt-get upgrade -y
-
-RUN apt-get install curl -y
-RUN apt-get install nodejs -y
-
-RUN curl -o /usr/bin/btsync.tar.gz https://download-cdn.getsyncapp.com/stable/linux-x64/BitTorrent-Sync_x64.tar.gz
-RUN cd /usr/bin; tar xvzf btsync.tar.gz; rm btsync.tar.gz;
-
+# from https://github.com/aduermael/btsync-docker with own improvements
 ADD btsync /btsync
 RUN mkdir /btsync/storage
 
@@ -22,4 +19,4 @@ EXPOSE 55555
 WORKDIR /btsync
 
 # Arguments: DIR SECRET
-ENTRYPOINT ["/bin/bash", "./start.sh"]
+ENTRYPOINT ["/bin/sh", "./start.sh"]
